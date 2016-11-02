@@ -49,7 +49,24 @@ An activity worker can be a program or even a person who performs the task using
 ###Decider
 - A Decider implements a Workflow’s coordination logic.
 - Decider schedules activity tasks, provides input data to the activity workers, processes events that arrive while the workflow is in progress, and ends (or closes) the workflow when the objective has been completed.
-- Decider directs the workflow by receiving decision tasks from SWF and responding back to SWF with decisions. A decision represents an action or set of actions which are the next steps in the workflow which can either be to schedule an activity task, set timers to delay the execution of an activity task, to request cancellation of activity tasks 
+- Decider directs the workflow by receiving decision tasks from SWF and responding back to SWF with decisions. A decision represents an action or set of actions which are the next steps in the workflow which can either be to schedule an activity task, set timers to delay the execution of an activity task, to request cancellation of activity tasks  
+
+- Workers and Deciders are both stateless, and can respond to increased traffic by simply adding additional Workers and Deciders as needed
+- Role of  SWF service is to function as a reliable central hub through which data is exchanged between the decider, the activity workers, and other relevant entities such as the person administering the workflow.
+- Mechanism by which both the activity workers and the decider receive their tasks (activity tasks and decision tasks resp.) is by polling the SWF
+- SWF allows “long polling”, requests will be held open for up to 60 seconds if necessary, to reduce network traffic and unnecessary processing
+- SWF informs the decider of the state of the workflow by including with each decision task, a copy of the current workflow execution history. The workflow execution history is composed of events, where an event represents a significant change in the state of the workflow execution for e.g events would be the completion of a task, notification that a task has timed out, or the expiration of a timer that was set earlier in the workflow execution. The history is a complete, consistent, and authoritative record of the workflow’s progress
+
+
+
+
+
+
+
+
+
+
+
 
 ##Workflow Implementation & Execution
 - Implement __Activity workers__ that implement the processing steps in the __Workflow__.
