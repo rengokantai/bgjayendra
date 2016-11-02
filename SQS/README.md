@@ -46,6 +46,51 @@ awaiting processing and acts as a buffer between the component producer and the 
     - messages larger than 256 KB can be managed using the __Amazon SQS or DynamoDB with SQS storing pointer__
   - Access Control
     - Access can be controlled for who can produce and consume messages to each queue
+  - Delay Queues
+    - delay queue allows the user to set a default delay on a queue such that delivery of all messages enqueued will be postponed for that duration of time
   
+- PCI Complaince
+  - Amazon SQS supports the processing, storage, and transmission of credit card data by a merchant or service provider, and has been validated as being compliant with Payment Card Industry (PCI) Data Security Standard (DSS).  
   
+
+
+
+
+### How SQS Queues Works
+- SQS allows you to create, delete queues and send and receive messages from the queue
+- SQS queue retains messages for four days, by default. However, queues can configured to retain messages for up to 14 days after the message has been sent.
+- Amazon SQS can delete your queue without notification if one of the following actions hasn’t been performed on it for 30 consecutive days.
+- SQS allows the deletion of the queue with messages in it
+
+#### Queue and Message Identifiers
+#####Queue URLs
+- Queue is identified by a unique queue name within the same aws account
+
+##### Message ID
+- Each message receives a system-assigned message ID that Amazon SQS returns to you in the SendMessage response.
+- However to delete a message, __the message’s receipt handle instead of the message ID is needed__
+- Message ID can be of is 100 characters max
+
+##### Receipt Handle
+- When a message is received from a queue, a receipt handle is returned with the message which is associated with the act of receving the message rather then the message itself
+- Receipt handle is required, not the message id, to delete a message or to change the message visibility
+- __If a message is received more than once, each time its received, a different receipt handle is assigned and the latest should be used always__
+
+
+####Visibility timeout
+- Behaviour
+  - SQS does not delete the message once it is received by an consumer,
+because the system is distributed, there’s no guarantee that the consumer will actually receive the message (it’s possible the connection could break or the component could fail before receiving the message)
+- Consumer should explicity delete the message from the Queue once it is received and successfully processed
+- __As the message is still available on the Queue, other consumers would be able to receive and process and this needs to be prevented__
+
+- SQS handles the above behaviour using Visibility timeout.
+- SQS blocks the visiblility of the message for the __Visibility timeout period__, which
+is the time during which SQS prevents other consuming components from receiving and processing that message
+- __Consumer should delete the message within the Visibility timout. If the consumer fails to delete the message before the visibility timeout expires, the message is visible again for other consumers.__
+
+- Visibility timeout considerations
+  - clock starts ticking once SQS returns the message
+  - should be large enough to take into account the processing time for each of the message
+  - default Visibility timeout for each Queue is __30 seconds__ and can be changed at the Queue level
   
