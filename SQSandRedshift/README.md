@@ -84,6 +84,6 @@ from provisioning the infrastructure capacity to automating ongoing administrati
   - backup storage – storage cost for automated and manual snapshots
   - data transfer
     - There is no data transfer charge for data transferred to or from Amazon Redshift outside of Amazon VPC
-    - Data transfer to or from Amazon Redshift in Amazon VPC accrues standard AWS data transfer charges.
+    - __Data transfer to or from Amazon Redshift in Amazon VPC accrues standard AWS data transfer charges__.
 
 
