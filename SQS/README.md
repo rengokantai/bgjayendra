@@ -92,5 +92,14 @@ is the time during which SQS prevents other consuming components from receiving 
 - Visibility timeout considerations
   - clock starts ticking once SQS returns the message
   - should be large enough to take into account the processing time for each of the message
-  - default Visibility timeout for each Queue is __30 seconds__ and can be changed at the Queue level
+  - default Visibility timeout for each Queue is __30 seconds__ and can be changed at the __Queue level__
+  - when receiving messages, a special visibility timeout for the returned messages can be set without changing the overall queue timeout using the receipt handle
+  - can be extended by the consumer, if the consumer thinks it won’t be able to process the message within the current visibility timeout period. SQS restarts the timeout period using the new value
+  - __a message’s Visibility timeout extension applies only to that particular receipt of the message and  does not affect the timeout for the queue or later receipts of the message__
+
+- SQS has an 120,000 limit for the number of inflight messages per queue i.e. message received but not yet deleted and any further messages would receive an error after reaching the limit
+
+
+
+
   
