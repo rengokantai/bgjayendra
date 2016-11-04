@@ -1,0 +1,73 @@
+## Overview
+- By default, all S3 buckets, objects and related subresources are private
+- __User is the AWS Account or the IAM user who access the resource__
+- Bucket owner is the AWS account that created a bucket
+- __Object owner is the AWS account that uploads the object to a bucket, not owned by the account__
+- Only the Resource owner, the AWS account that creates the resource, can access the resource
+- Resource owner can be
+  - AWS account that creates the bucket or object owns those resources
+  - If an IAM user creates the bucket or object, the AWS account of the IAM user owns the resource
+  - If the bucket owner grants cross-account permissions to other AWS account users to upload objects to the buckets, the objects are owned 
+  by the AWS account of the user who uploaded the object and __not the bucket owner except for the following conditions__
+    - Bucket owner can deny access to the object, as its still the bucket owner who pays for the object
+    - Bucket owner can delete or apply archival rules to the object and perform restoration
+    
+
+## S3 Permissions Classification
+S3 permissions are classified into Resource based policies and User policies
+
+###User Policies
+- User based policies use IAM with S3 to control the type of access a user or group of users has to specific parts of an S3 bucket the AWS account owns
+- __User based policy is always attached to an User, Group or a Role, anonymous permissions cannot be granted__
+- If an AWS account that owns a bucket wants to grant permission to users in its account, it can use either a bucket policy or a user policy
+
+
+###Resource based policies
+Bucket policies and access control lists __(ACLs) are resource-based__ because they are attached to the Amazon S3 resources
+
+
+
+#### Bucket Policies
+- Bucket policy can be used to grant cross-account 
+access to other AWS accounts or IAM users in other accounts for the bucket and objects in it.
+- Bucket policies provide centralized, access control to buckets and objects based on a variety of conditions, including S3 operations, requesters, resources, and aspects of the request (e.g. IP address)
+- If an AWS account that owns a bucket wants to grant permission to users in its account, it can use either a bucket policy or a user policy
+- Permissions attached to a bucket apply to all of the objects in that bucket created and owned by the bucket owner
+- Policies can either add or deny permissions across all (or a subset) of objects within a bucket
+- Only the bucket owner is allowed to associate a policy with a bucket
+
+
+
+
+### Access Control Lists (ACLs)
+- Each bucket and object has an ACL associated with it.
+- An ACL is a list of grants identifying grantee and permission granted
+- ACLs are used to grant __basic read/write permissions__ on resources to __other AWS accounts.__
+- ACL supports limited permissions set and
+  - cannot grant conditional permissions, nor can you explicitly deny permissions
+  - cannot be used to grant permissions for bucket subresources
+- __Permission can be granted to an AWS account by the email address or the canonical user ID (is just an obfuscated Account Id). 
+If an email address is provided, S3 will still find the canonical user ID for the user and add it to the ACL.__
+- __It is Recommended to use Canonical user ID as email address would not be supported__
+
+
+
+- __Bucket ACL__
+  - Only recommended use case for the bucket ACL is to grant write permission
+  to S3 Log Delivery group to write access log objects to the bucket
+  - Bucket ACL will help grant write permission on the bucket to the Log Delivery group if access log delivery is needed to your bucket
+  - Only way you can grant necessary permissions to the Log Delivery group is via a bucket ACL
+  
+- __Object ACL__
+  - Object ACLs control only Object-level Permissions
+  - Object ACL is the only way to manage permission to an object in the bucket not owned by the bucket owner i.e. If the bucket owner allows cross-account object uploads and if the object owner is different from the bucket owner, the only way for the object owner to grant permissions on the object is through Object ACL
+  - If the Bucket and Object is owned by the same AWS account, __Bucket policy__ can be used to manage the permissions
+  - If the Object and User is owned by the same AWS account, __User policy__ can be used to manage the permissions
+
+## Amazon S3 Request Authorization
+(tbc)
+
+ Questions:
+ 
+ Both the object and bucket can have ACL but folders cannot have ACL
+
