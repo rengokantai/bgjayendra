@@ -35,7 +35,30 @@ within an bucket along with the bucket name and object key
     - __If a Object with a specific version ID is deleted, a permanent deletion happens and the object cannot be recovered__
 
 
+- Delete marker
+  - Delete Marker object does not have any data or acl associated with it, just the key and the version ID
+  - An object retrieval on a bucket with delete marker as the Current version would return a 404
+  - __Only a DELETE operation is allowed on the Delete Marker object__
+  - __If the Delete marker object is deleted by specifying its version ID, the previous non current version object becomes the current version object__
+  - If a DELETE request is fired on the Bucket with Delete Marker as the current version, the Delete marker object is not deleted but an Delete Marker is added again
+  
+- Restoring Previous Versions
+  - Copy a previous version of the object into the same bucket. Copied object becomes the current version of that object and all object versions are preserved (you still keep all the versions)(Recommended)
+  - Permanently delete the current version of the object. When you delete the current object version, you, in effect, turn the previous version into the current version of that object.
 
 
+- Versioning Suspended Bucket
+  - Versioning can be suspended to stop accruing new versions of the same object in a bucket
+  - Existing objects in your bucket do not change and only future requests behavior changes
+  - For each new object addition, a object with version ID null is added.
+  - For each object addition with the same key name, the object with the version ID null is overwritten
+  - An object retrieval request will always return the current version of the object
+  - __A DELETE request on the bucket, would permanently delete the version ID null object and inserts a Delete Marker__
+  - A DELETE request does not delete anything if the bucket does not have an object with version ID null
+  - A DELETE request can still be fired with a specific version ID for any previous object with version IDs stored
 
+- MFA Delete
+  - Additional security can be enabled by configuring a bucket to enable MFA (Multi-Factor Authentication) delete
+  - __MFA Delete can be enabled on a bucket to ensure that data in your bucket cannot be accidentally deleted__
+  - While the bucket owner, the AWS account that created the bucket (root account), and all authorized IAM users can enable versioning,   __but only the bucket owner (root account) can enable MFA delete.__
 
