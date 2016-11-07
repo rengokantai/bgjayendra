@@ -27,6 +27,11 @@ with data rarely retrieved, and retrieval latency of several hours is acceptable
     - Vault allows storage of unlimited number of archives
     - Glacier supports various vault operations which are region specific
     - An AWS account can create up to __1,000 vaults per region__.
+  - Archive
+    - An archive can be any data such as a photo, video, or document and is a base unit of storage in Amazon Glacier.
+    - Each archive has a unique ID and an optional description, which can only be specified during the upload of an archive.
+    - Glacier assigns the archive an ID, which is unique in the AWS region in which it is stored.
+    - Archive can be uploaded in a single request. While for large archives, Glacier provides a multipart upload API that enables uploading an archive in parts.
 
 
 
